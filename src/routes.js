@@ -4,6 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Home from './pages/Home';
 import Cart from './pages/Cart';
 
+import Header from './components/Header';
+
 const Stack = createStackNavigator();
 
 export default function Routes() {
@@ -12,8 +14,9 @@ export default function Routes() {
       headerBackTitleVisible={false}
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#191920',
+          backgroundColor: '#171717',
         },
+        headerTitle: navigation => <Header {...navigation} />,
       }}
     >
       <Stack.Screen name="Home" component={Home} />
