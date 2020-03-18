@@ -34,5 +34,6 @@ module.exports = {
     ],
     'import/prefer-default-export': 'off',
     'no-undef': 'off',
+    'react/jsx-props-no-spreading': 'off',
   },
 };

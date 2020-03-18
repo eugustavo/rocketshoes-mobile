@@ -16,7 +16,9 @@ export default function Routes() {
         headerStyle: {
           backgroundColor: '#171717',
         },
-        headerTitle: navigation => <Header {...navigation} />,
+        headerLeft: null,
+        gestureDirection: 'horizontal-inverted',
+        headerTitle: props => <Header {...props} />,
       }}
     >
       <Stack.Screen name="Home" component={Home} />
