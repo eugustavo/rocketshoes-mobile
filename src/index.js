@@ -10,12 +10,12 @@ import Routes from './routes';
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <>
+    <>
+      <NavigationContainer>
         <StatusBar barStyle="light-content" backgroundColor="#171717" />
         <Routes />
-      </>
-    </NavigationContainer>
+      </NavigationContainer>
+    </>
   );
 };
 

@@ -55,7 +55,7 @@ export default function Home() {
               <ProductAmount>
                 <>
                   <Icon name="add-shopping-cart" color="#FFF" size={20} />
-                  <ProductAmountText>{0}</ProductAmountText>
+                  <ProductAmountText>{1}</ProductAmountText>
                 </>
               </ProductAmount>
               <AddCartText>ADD TO CART</AddCartText>
