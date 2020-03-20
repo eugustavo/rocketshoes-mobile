@@ -34,6 +34,8 @@ module.exports = {
     ],
     'import/prefer-default-export': 'off',
     'no-undef': 'off',
+    'no-param-reassign': 'off',
     'react/jsx-props-no-spreading': 'off',
+    'no-console': ["error", {allow: ["tron"] }],
   },
 };

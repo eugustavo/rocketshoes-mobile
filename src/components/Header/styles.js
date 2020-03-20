@@ -14,6 +14,7 @@ export const Content = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  padding: 0 10px;
 `;
 
 export const LogoContent = styled.TouchableOpacity`

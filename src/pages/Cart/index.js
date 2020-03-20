@@ -1,6 +1,11 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { formatPrice } from '../../util/format';
+
+import * as CartActions from '../../store/modules/cart/actions';
 
 import {
   Container,
@@ -24,85 +29,42 @@ import {
   CheckoutButtonText,
 } from './styles';
 
-export default function Cart() {
-  const products = [
-    {
-      id: 1,
-      title: 'Tênis VR Caminhada Confortável Detalhes Couro Masculino',
-      price: 139.9,
-      priceFormatted: 'R$ 139.90',
-      image:
-        'https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis2.jpg',
-    },
-    {
-      id: 2,
-      title: 'Tênis de Caminhada Leve Confortável',
-      price: 179.9,
-      priceFormatted: 'R$ 179.90',
-      image:
-        'https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis1.jpg',
-    },
-    {
-      id: 3,
-      title: 'Tênis VR Caminhada Confortável Detalhes Couro Masculino',
-      price: 139.9,
-      priceFormatted: 'R$ 139.90',
-      image:
-        'https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis2.jpg',
-    },
-    {
-      id: 4,
-      title: 'Tênis de Caminhada Leve Confortável',
-      price: 179.9,
-      priceFormatted: 'R$ 179.90',
-      image:
-        'https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis1.jpg',
-    },
-    {
-      id: 5,
-      title: 'Tênis VR Caminhada Confortável Detalhes Couro Masculino',
-      price: 139.9,
-      priceFormatted: 'R$ 139.90',
-      image:
-        'https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis2.jpg',
-    },
-    {
-      id: 6,
-      title: 'Tênis de Caminhada Leve Confortável',
-      price: 179.9,
-      priceFormatted: 'R$ 179.90',
-      image:
-        'https://rocketseat-cdn.s3-sa-east-1.amazonaws.com/modulo-redux/tenis1.jpg',
-    },
-  ];
+function Cart({ cart, removeFromCart, updateAmount, total }) {
+  function increment(product) {
+    updateAmount(product.id, product.amount + 1);
+  }
+
+  function decrement(product) {
+    updateAmount(product.id, product.amount - 1);
+  }
 
   return (
     <Container>
       <Content>
         <CartList
-          data={products}
+          data={cart}
           keyExtractor={product => String(product.id)}
-          renderItem={({ item }) => (
+          renderItem={({ item: product }) => (
             <Product>
-              <ProductImage source={{ uri: item.image }} />
+              <ProductImage source={{ uri: product.image }} />
               <ProductInfo>
-                <ProductTitle>{item.title}</ProductTitle>
-                <ProductPrice>{item.priceFormatted}</ProductPrice>
+                <ProductTitle>{product.title}</ProductTitle>
+                <ProductPrice>{product.subtotal}</ProductPrice>
                 <ProductAmount>
-                  <AmountButtonDecrement>
+                  <AmountButtonDecrement onPress={() => decrement(product)}>
                     <Icon
                       name="remove-circle-outline"
                       color="#7159c1"
                       size={20}
                     />
                   </AmountButtonDecrement>
-                  <AmountNumber>2</AmountNumber>
-                  <AmountButtonIncrement>
+                  <AmountNumber>{product.amount}</AmountNumber>
+                  <AmountButtonIncrement onPress={() => increment(product)}>
                     <Icon name="add-circle-outline" color="#7159c1" size={20} />
                   </AmountButtonIncrement>
                 </ProductAmount>
               </ProductInfo>
-              <DeleteButton>
+              <DeleteButton onPress={() => removeFromCart(product.id)}>
                 <Icon name="delete-forever" color="#7159c1" size={24} />
               </DeleteButton>
             </Product>
@@ -111,7 +73,7 @@ export default function Cart() {
         <Checkout>
           <CheckoutTotal>
             <CheckoutTitle> Total </CheckoutTitle>
-            <CheckoutValue> R$1.400,00 </CheckoutValue>
+            <CheckoutValue> {total} </CheckoutValue>
           </CheckoutTotal>
           <CheckoutButton>
             <Icon name="credit-card" color="#7159c1" size={20} />
@@ -122,3 +84,35 @@ export default function Cart() {
     </Container>
   );
 }
+
+Cart.propTypes = {
+  cart: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      title: PropTypes.string,
+      image: PropTypes.string,
+      priceFormatted: PropTypes.string,
+      subtotal: PropTypes.string,
+    })
+  ).isRequired,
+  removeFromCart: PropTypes.func.isRequired,
+  updateAmount: PropTypes.func.isRequired,
+  total: PropTypes.string.isRequired,
+};
+
+const mapStateToProps = state => ({
+  cart: state.cart.map(product => ({
+    ...product,
+    subtotal: formatPrice(product.price * product.amount),
+  })),
+  total: formatPrice(
+    state.cart.reduce((total, product) => {
+      return total + product.price * product.amount;
+    }, 0)
+  ),
+});
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(CartActions, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Cart);

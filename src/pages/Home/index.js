@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useNavigation } from '@react-navigation/native';
 import { formatPrice } from '../../util/format';
+
+import * as CartActions from '../../store/modules/cart/actions';
 
 import api from '../../services/api';
 
@@ -18,7 +22,7 @@ import {
   AddCartText,
 } from './styles';
 
-export default function Home() {
+function Home({ addToCart, amount }) {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -34,31 +38,26 @@ export default function Home() {
     loadProducts();
   }, []);
 
-  const navigation = useNavigation();
-
-  // eslint-disable-next-line no-unused-vars
-  async function handleAddProduct(item) {
-    navigation.navigate('Cart', { transitionStyle: 'inverted' });
-  }
-
   return (
     <Container>
       <ProductList
         data={products}
         keyExtractor={product => String(product.id)}
-        renderItem={({ item }) => (
+        renderItem={({ item: product }) => (
           <Product>
-            <ProductImage source={{ uri: item.image }} />
-            <ProductTitle>{item.title}</ProductTitle>
-            <ProductPrice>{item.priceFormatted}</ProductPrice>
-            <AddCart onPress={() => handleAddProduct(item)}>
+            <ProductImage source={{ uri: product.image }} />
+            <ProductTitle>{product.title}</ProductTitle>
+            <ProductPrice>{product.priceFormatted}</ProductPrice>
+            <AddCart onPress={() => addToCart(product)}>
               <ProductAmount>
                 <>
                   <Icon name="add-shopping-cart" color="#FFF" size={20} />
-                  <ProductAmountText>{1}</ProductAmountText>
+                  <ProductAmountText>
+                    {amount[product.id] || 0}
+                  </ProductAmountText>
                 </>
               </ProductAmount>
-              <AddCartText>ADD TO CART</AddCartText>
+              <AddCartText>ADICIONAR AO CARRINHO</AddCartText>
             </AddCart>
           </Product>
         )}
@@ -66,3 +65,22 @@ export default function Home() {
     </Container>
   );
 }
+
+Home.propTypes = {
+  addToCart: PropTypes.func.isRequired,
+  amount: PropTypes.shape({
+    amount: PropTypes.number,
+  }).isRequired,
+};
+
+const mapStateToProps = state => ({
+  amount: state.cart.reduce((amount, product) => {
+    amount[product.id] = product.amount;
+    return amount;
+  }, {}),
+});
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(CartActions, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

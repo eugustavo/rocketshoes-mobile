@@ -13,11 +13,6 @@ export default function Routes() {
     <Stack.Navigator
       headerBackTitleVisible={false}
       screenOptions={{
-        headerStyle: {
-          backgroundColor: '#171717',
-        },
-        headerLeft: null,
-        gestureDirection: 'horizontal-inverted',
         header: props => <Header {...props} />,
       }}
     >
