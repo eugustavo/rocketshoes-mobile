@@ -2,25 +2,20 @@ import { CommonActions } from '@react-navigation/native';
 
 let navigator;
 
-function setNavigator(ref) {
+function setNavigation(ref) {
   navigator = ref;
 }
 
-function navigate(routeName, params) {
+function navigate(name, params) {
   navigator.dispatch(
     CommonActions.navigate({
-      routeName,
+      name,
       params,
     })
   );
 }
 
-function navigateBack() {
-  navigator.dispatch(CommonActions.back());
-}
-
 export default {
+  setNavigation,
   navigate,
-  navigateBack,
-  setNavigator,
 };

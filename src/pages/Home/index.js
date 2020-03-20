@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -22,8 +23,9 @@ import {
   AddCartText,
 } from './styles';
 
-function Home({ addToCart, amount }) {
+function Home({ addToCartRequest, amount }) {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function loadProducts() {
@@ -38,6 +40,14 @@ function Home({ addToCart, amount }) {
     loadProducts();
   }, []);
 
+  async function handleAddProduct(id) {
+    setLoading(true);
+    addToCartRequest(id);
+    setTimeout(function load() {
+      setLoading(false);
+    }, 550); // Geralmente o tempo de resposta da API
+  }
+
   return (
     <Container>
       <ProductList
@@ -48,7 +58,7 @@ function Home({ addToCart, amount }) {
             <ProductImage source={{ uri: product.image }} />
             <ProductTitle>{product.title}</ProductTitle>
             <ProductPrice>{product.priceFormatted}</ProductPrice>
-            <AddCart onPress={() => addToCart(product)}>
+            <AddCart onPress={() => handleAddProduct(product.id)}>
               <ProductAmount>
                 <>
                   <Icon name="add-shopping-cart" color="#FFF" size={20} />
@@ -57,7 +67,15 @@ function Home({ addToCart, amount }) {
                   </ProductAmountText>
                 </>
               </ProductAmount>
-              <AddCartText>ADICIONAR AO CARRINHO</AddCartText>
+              {loading ? (
+                <ActivityIndicator
+                  color="#FFF"
+                  size={32}
+                  style={{ flex: 1, alignItems: 'center' }}
+                />
+              ) : (
+                <AddCartText>ADICIONAR AO CARRINHO</AddCartText>
+              )}
             </AddCart>
           </Product>
         )}
@@ -67,7 +85,7 @@ function Home({ addToCart, amount }) {
 }
 
 Home.propTypes = {
-  addToCart: PropTypes.func.isRequired,
+  addToCartRequest: PropTypes.func.isRequired,
   amount: PropTypes.shape({
     amount: PropTypes.number,
   }).isRequired,

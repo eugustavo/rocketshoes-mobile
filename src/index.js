@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { StatusBar } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
+import NavigationService from './services/NavigationService';
 import store from './store';
 
 import Routes from './routes';
@@ -14,7 +15,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <>
-        <NavigationContainer>
+        <NavigationContainer ref={ref => NavigationService.setNavigation(ref)}>
           <StatusBar barStyle="light-content" backgroundColor="#171717" />
           <Routes />
         </NavigationContainer>
