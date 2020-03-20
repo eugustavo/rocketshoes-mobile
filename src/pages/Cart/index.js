@@ -27,13 +27,22 @@ import {
   CheckoutValue,
   CheckoutButton,
   CheckoutButtonText,
+  EmptyContent,
+  EmptyText,
+  EmptyButton,
+  EmptyButtonText,
 } from './styles';
 
-function Cart({ cart, removeFromCart, updateAmountRequest, total }) {
+function Cart({
+  cart,
+  removeFromCart,
+  updateAmountRequest,
+  total,
+  navigation,
+}) {
   function increment(product) {
     updateAmountRequest(product.id, product.amount + 1);
   }
-
   function decrement(product) {
     updateAmountRequest(product.id, product.amount - 1);
   }
@@ -41,45 +50,62 @@ function Cart({ cart, removeFromCart, updateAmountRequest, total }) {
   return (
     <Container>
       <Content>
-        <CartList
-          data={cart}
-          keyExtractor={product => String(product.id)}
-          renderItem={({ item: product }) => (
-            <Product>
-              <ProductImage source={{ uri: product.image }} />
-              <ProductInfo>
-                <ProductTitle>{product.title}</ProductTitle>
-                <ProductPrice>{product.subtotal}</ProductPrice>
-                <ProductAmount>
-                  <AmountButtonDecrement onPress={() => decrement(product)}>
-                    <Icon
-                      name="remove-circle-outline"
-                      color="#7159c1"
-                      size={20}
-                    />
-                  </AmountButtonDecrement>
-                  <AmountNumber>{product.amount}</AmountNumber>
-                  <AmountButtonIncrement onPress={() => increment(product)}>
-                    <Icon name="add-circle-outline" color="#7159c1" size={20} />
-                  </AmountButtonIncrement>
-                </ProductAmount>
-              </ProductInfo>
-              <DeleteButton onPress={() => removeFromCart(product.id)}>
-                <Icon name="delete-forever" color="#7159c1" size={24} />
-              </DeleteButton>
-            </Product>
-          )}
-        />
-        <Checkout>
-          <CheckoutTotal>
-            <CheckoutTitle> Total </CheckoutTitle>
-            <CheckoutValue> {total} </CheckoutValue>
-          </CheckoutTotal>
-          <CheckoutButton>
-            <Icon name="credit-card" color="#7159c1" size={20} />
-            <CheckoutButtonText> PAGAR </CheckoutButtonText>
-          </CheckoutButton>
-        </Checkout>
+        {cart.length === 0 ? (
+          <EmptyContent>
+            <Icon name="remove-shopping-cart" color="#7159c1" size={64} />
+            <EmptyText>Carrinho vazio :/</EmptyText>
+            <EmptyButton onPress={() => navigation.navigate('Home')}>
+              <Icon name="shopping-cart" color="#FFF" size={20} />
+              <EmptyButtonText>FAZER COMPRAS</EmptyButtonText>
+            </EmptyButton>
+          </EmptyContent>
+        ) : (
+          <>
+            <CartList
+              data={cart}
+              keyExtractor={product => String(product.id)}
+              renderItem={({ item: product }) => (
+                <Product>
+                  <ProductImage source={{ uri: product.image }} />
+                  <ProductInfo>
+                    <ProductTitle>{product.title}</ProductTitle>
+                    <ProductPrice>{product.subtotal}</ProductPrice>
+                    <ProductAmount>
+                      <AmountButtonDecrement onPress={() => decrement(product)}>
+                        <Icon
+                          name="remove-circle-outline"
+                          color="#7159c1"
+                          size={20}
+                        />
+                      </AmountButtonDecrement>
+                      <AmountNumber>{product.amount}</AmountNumber>
+                      <AmountButtonIncrement onPress={() => increment(product)}>
+                        <Icon
+                          name="add-circle-outline"
+                          color="#7159c1"
+                          size={20}
+                        />
+                      </AmountButtonIncrement>
+                    </ProductAmount>
+                  </ProductInfo>
+                  <DeleteButton onPress={() => removeFromCart(product.id)}>
+                    <Icon name="delete-forever" color="#7159c1" size={24} />
+                  </DeleteButton>
+                </Product>
+              )}
+            />
+            <Checkout>
+              <CheckoutTotal>
+                <CheckoutTitle> Total </CheckoutTitle>
+                <CheckoutValue> {total} </CheckoutValue>
+              </CheckoutTotal>
+              <CheckoutButton>
+                <Icon name="credit-card" color="#7159c1" size={20} />
+                <CheckoutButtonText> PAGAR </CheckoutButtonText>
+              </CheckoutButton>
+            </Checkout>
+          </>
+        )}
       </Content>
     </Container>
   );
@@ -98,6 +124,9 @@ Cart.propTypes = {
   removeFromCart: PropTypes.func.isRequired,
   updateAmountRequest: PropTypes.func.isRequired,
   total: PropTypes.string.isRequired,
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func,
+  }).isRequired,
 };
 
 const mapStateToProps = state => ({

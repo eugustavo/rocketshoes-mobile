@@ -26,8 +26,10 @@ import {
 function Home({ addToCartRequest, amount }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadingProducts, setLoadingProducts] = useState(false);
 
   useEffect(() => {
+    setLoadingProducts(true);
     async function loadProducts() {
       const response = await api.get('products');
       const data = response.data.map(product => ({
@@ -36,6 +38,7 @@ function Home({ addToCartRequest, amount }) {
       }));
 
       setProducts(data);
+      setLoadingProducts(false);
     }
     loadProducts();
   }, []);
@@ -50,36 +53,44 @@ function Home({ addToCartRequest, amount }) {
 
   return (
     <Container>
-      <ProductList
-        data={products}
-        keyExtractor={product => String(product.id)}
-        renderItem={({ item: product }) => (
-          <Product>
-            <ProductImage source={{ uri: product.image }} />
-            <ProductTitle>{product.title}</ProductTitle>
-            <ProductPrice>{product.priceFormatted}</ProductPrice>
-            <AddCart onPress={() => handleAddProduct(product.id)}>
-              <ProductAmount>
-                <>
-                  <Icon name="add-shopping-cart" color="#FFF" size={20} />
-                  <ProductAmountText>
-                    {amount[product.id] || 0}
-                  </ProductAmountText>
-                </>
-              </ProductAmount>
-              {loading ? (
-                <ActivityIndicator
-                  color="#FFF"
-                  size={32}
-                  style={{ flex: 1, alignItems: 'center' }}
-                />
-              ) : (
-                <AddCartText>ADICIONAR AO CARRINHO</AddCartText>
-              )}
-            </AddCart>
-          </Product>
-        )}
-      />
+      {loadingProducts ? (
+        <ActivityIndicator
+          color="#7159c1"
+          size={48}
+          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+        />
+      ) : (
+        <ProductList
+          data={products}
+          keyExtractor={product => String(product.id)}
+          renderItem={({ item: product }) => (
+            <Product>
+              <ProductImage source={{ uri: product.image }} />
+              <ProductTitle>{product.title}</ProductTitle>
+              <ProductPrice>{product.priceFormatted}</ProductPrice>
+              <AddCart onPress={() => handleAddProduct(product.id)}>
+                <ProductAmount>
+                  <>
+                    <Icon name="add-shopping-cart" color="#FFF" size={20} />
+                    <ProductAmountText>
+                      {amount[product.id] || 0}
+                    </ProductAmountText>
+                  </>
+                </ProductAmount>
+                {loading ? (
+                  <ActivityIndicator
+                    color="#FFF"
+                    size={32}
+                    style={{ flex: 1, alignItems: 'center' }}
+                  />
+                ) : (
+                  <AddCartText>ADICIONAR AO CARRINHO</AddCartText>
+                )}
+              </AddCart>
+            </Product>
+          )}
+        />
+      )}
     </Container>
   );
 }

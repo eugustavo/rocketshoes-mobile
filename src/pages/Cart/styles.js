@@ -107,3 +107,32 @@ export const CheckoutButtonText = styled.Text`
   font-weight: bold;
   color: #7159c1;
 `;
+
+export const EmptyContent = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const EmptyText = styled.Text`
+  font-size: 32px;
+  font-weight: bold;
+  color: #7159c1;
+`;
+
+export const EmptyButton = styled(RectButton)`
+  background: #7159c1;
+  border-radius: 4px;
+
+  padding: 15px 20px;
+  margin-top: 10px;
+
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const EmptyButtonText = styled.Text`
+  color: #fff;
+  margin-left: 5px;
+`;
