@@ -1,6 +1,6 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -13,7 +13,10 @@ import {
   ItemCount,
 } from './styles';
 
-function Header({ navigation, cartSize }) {
+export default function Header() {
+  const cartSize = useSelector(state => state.cart.length);
+  const navigation = useNavigation();
+
   return (
     <Container>
       <Content>
@@ -28,14 +31,3 @@ function Header({ navigation, cartSize }) {
     </Container>
   );
 }
-
-Header.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func,
-  }).isRequired,
-  cartSize: PropTypes.number.isRequired,
-};
-
-export default connect(state => ({
-  cartSize: state.cart.length,
-}))(Header);
