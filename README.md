@@ -29,7 +29,7 @@
 
 Este projeto foi desenvolvido a partir do [Rocketseat Bootcamp GoStack 10](https://rocketseat.com.br/bootcamp) com as seguintes tecnologias:
 
--  [ReactJS](https://reactjs.org/)
+-  [React](https://reactjs.org/)
 -  [Redux](https://redux.js.org/)
 -  [Redux-Saga](https://redux-saga.js.org/)
 -  [React Navigation](https://reactnavigation.org/)
@@ -38,8 +38,6 @@ Este projeto foi desenvolvido a partir do [Rocketseat Bootcamp GoStack 10](https
 -  [NumeralJS](http://numeraljs.com/)
 -  [styled-components](https://www.styled-components.com/)
 -  [react-native-vector-icons](https://github.com/oblador/react-native-vector-icons)
--  [react-native-shimmer-placeholder](https://github.com/tomzaku/react-native-shimmer-placeholder)
--  [react-native-linear-gradient](https://github.com/react-native-community/react-native-linear-gradient)
 -  [Reactotron](https://infinite.red/reactotron)
 -  [VS Code][vc] with [EditorConfig][vceditconfig] and [ESLint][vceslint]
 
@@ -66,7 +64,7 @@ $ react-native run-android
 
 ---
 
-Feito com ♥ por Gustavo Souza :wave: [Entre em contato :)](https://www.linkedin.com/in/lukemorales/)
+Feito com ♥ por Gustavo Souza :wave: [Entre em contato :)](https://www.linkedin.com/in/eugustavosouza/)
 
 [nodejs]: https://nodejs.org/
 [yarn]: https://yarnpkg.com/
